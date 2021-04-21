@@ -1,0 +1,23 @@
+{
+  "name": "impossible-xo",
+  "version": "0.0.1",
+  "description": "A tic-tac-toe game that is impossible to win",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EMPAT94/impossible-xo.git"
+  },
+  "author": "Pritesh T.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EMPAT94/impossible-xo/issues"
+  },
+  "homepage": "https://github.com/EMPAT94/impossible-xo#readme",
+  "devDependencies": {
+    "cypress": "^7.1.0",
+    "jest": "^26.6.3"
+  }
+}
