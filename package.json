@@ -2,7 +2,6 @@
   "name": "impossible-xo",
   "version": "0.0.1",
   "description": "A tic-tac-toe game that is impossible to win",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
