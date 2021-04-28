@@ -6,7 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <title>Impossible XO</title>
-    <meta name="description" content="A tic-tac-toe game that is impossible to win!" />
+    <meta
+      name="description"
+      content="A tic-tac-toe game that is impossible to win!"
+    />
     <meta name="author" content="Pritesh Tupe" />
 
     <link rel="stylesheet" href="style.css" />
@@ -15,21 +18,29 @@
   <body>
     <div class="container">
       <table id="board">
-        <tr>
-          <td class="cell" id="0">0</td>
-          <td class="cell" id="1">1</td>
-          <td class="cell" id="2">2</td>
-        </tr>
-        <tr>
-          <td class="cell" id="3">3</td>
-          <td class="cell" id="4">4</td>
-          <td class="cell" id="5">5</td>
-        </tr>
-        <tr>
-          <td class="cell" id="6">6</td>
-          <td class="cell" id="7">7</td>
-          <td class="cell" id="8">8</td>
-        </tr>
+        <thead>
+          <tr id="msg-box" >
+            <td colspan="3">message box</td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="cell" id="0"></td>
+            <td class="cell" id="1"></td>
+            <td class="cell" id="2"></td>
+          </tr>
+          <tr>
+            <td class="cell" id="3"></td>
+            <td class="cell" id="4"></td>
+            <td class="cell" id="5"></td>
+          </tr>
+          <tr>
+            <td class="cell" id="6"></td>
+            <td class="cell" id="7"></td>
+            <td class="cell" id="8"></td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
