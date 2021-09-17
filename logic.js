@@ -18,7 +18,7 @@ let state;
  */
 const compareBoards = (b1, b2) => b1.every((c, i) => (c === e ? !b2[i] : c === d || c === b2[i]));
 
-function checkIfWinningOnNextTurn(b /* board */, s /* state */) {
+function checkIfWinning(s /* x | o */) {
   /**
    * Note:
    * d = don't care
@@ -27,6 +27,8 @@ function checkIfWinningOnNextTurn(b /* board */, s /* state */) {
    *
    * s wins if e becomes s on next turn
    */
+
+  const b = state.board;
 
   // Win first row
   if (compareBoards([e, s, s], b)) return "0";
@@ -69,6 +71,15 @@ function checkIfWinningOnNextTurn(b /* board */, s /* state */) {
   if (compareBoards([d, d, s, d, s, d, e, d, d], b)) return "6";
 }
 
+// Similar to above, but only to ensure not getting trapped
+function checkIfLosing() {
+  const s = state.next;
+  const b = state.board;
+
+  if (compareBoards([e, e, d, e, o, d, x, e, e], b)) return "1";
+  if (compareBoards([e, e, e, e, o, x, e, x, e], b)) return "8";
+}
+
 // Main Logic of next play
 function aiPlay() {
   const b = state.board;
@@ -77,28 +88,32 @@ function aiPlay() {
   let aiWon = false;
   let draw = false;
 
-  // Check for self wins, snatch win if present
-  let i = checkIfWinningOnNextTurn(b, state.next);
-  if (i) {
-    cell = i;
-    aiWon = true;
-  } else {
-    // If no self win, check for opponent win, block that win
-    i = checkIfWinningOnNextTurn(b, state.prev);
-    if (i) cell = i;
-    else {
-      // If center if free, take it
-      if (!b[4]) cell = "4";
-      // Else take a corner on top
-      else if (!b[0]) cell = "0";
+  if (state.aiTurns === 1) cell = checkIfLosing();
+
+  if (!cell) {
+    // Check for self wins, snatch win if present
+    let i = checkIfWinning(state.next);
+    if (i) {
+      cell = i;
+      aiWon = true;
+    } else {
+      // If no self win, check for opponent win, block that win
+      i = checkIfWinning(state.prev);
+      if (i) cell = i;
       else {
-        // Pick the first empty spot
-        i = b.findIndex(c => !c);
-        if (i >= 0) {
-          cell = i.toString(); // In case of 0
-        } else {
-          // If no empty spot then game is draw
-          draw = true;
+        // If center if free, take it
+        if (!b[4]) cell = "4";
+        // Else take a corner on top
+        else if (!b[0]) cell = "0";
+        else {
+          // Pick the first empty spot that can cause win
+          i = b.findIndex(c => !c);
+          if (i >= 0) {
+            cell = i.toString(); // In case of 0
+          } else {
+            // If no empty spot then game is draw
+            draw = true;
+          }
         }
       }
     }
@@ -170,7 +185,6 @@ function updateMsg(msg) {
     msgBox.innerHTML = "Great, managed to draw!";
     msgBox.className = "draw";
   } else {
-    console.log(state);
     if (state.aiTurns + state.plTurns === 2) {
       msgBox.innerHTML = "Game On!";
       msgBox.className = "game-on";
