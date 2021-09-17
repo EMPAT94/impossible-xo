@@ -77,7 +77,7 @@ function checkIfLosing() {
   const b = state.board;
 
   if (compareBoards([e, e, d, e, o, d, x, e, e], b)) return "1";
-  if (compareBoards([e, e, e, e, o, x, e, x, e], b)) return "8";
+  if (compareBoards([d, e, e, e, o, d, e, d, e], b)) return "8";
 }
 
 // Main Logic of next play
