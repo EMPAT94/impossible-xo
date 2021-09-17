@@ -1,20 +1,24 @@
-const NEW_BOARD = ["", "", "", "", "", "", "", "", ""];
-const x = "X";
-const o = "O";
+const x = "&cross;";
+const o = "&#9711;";
 const d = "don't care";
 const e = "empty";
 
-const state = {
-  plTurns: 0,
-  aiTurns: 0,
-  next: x,
-  prev: o,
-  board: NEW_BOARD,
-};
+let state;
 
+/*
+ * Note:
+ *
+ * For every cell of b1
+ *   if empty then return (is b2 cell also is empty?)
+ *   else if not empty then
+ *     if value doesnt matter then return true
+ *     else return (is value of b1 cell equal to value of b2 cell?)
+ *
+ * TODO: Simplify maybe?
+ */
 const compareBoards = (b1, b2) => b1.every((c, i) => (c === e ? !b2[i] : c === d || c === b2[i]));
 
-function checkIfWinningOnNextTurn(b, s) {
+function checkIfWinningOnNextTurn(b /* board */, s /* state */) {
   /**
    * Note:
    * d = don't care
@@ -24,25 +28,20 @@ function checkIfWinningOnNextTurn(b, s) {
    * s wins if e becomes s on next turn
    */
 
-  const d_r = [d, d, d];
-  const r_1 = [e, s, s];
-  const r_2 = [s, e, s];
-  const r_3 = [s, s, e];
-
   // Win first row
-  if (compareBoards(r_1, b)) return "0";
-  if (compareBoards(r_2, b)) return "1";
-  if (compareBoards(r_3, b)) return "2";
+  if (compareBoards([e, s, s], b)) return "0";
+  if (compareBoards([s, e, s], b)) return "1";
+  if (compareBoards([s, s, e], b)) return "2";
 
   // Win second row
-  if (compareBoards([...d_r, ...r_1], b)) return "3";
-  if (compareBoards([...d_r, ...r_2], b)) return "4";
-  if (compareBoards([...d_r, ...r_3], b)) return "5";
+  if (compareBoards([d, d, d, e, s, s], b)) return "3";
+  if (compareBoards([d, d, d, s, e, s], b)) return "4";
+  if (compareBoards([d, d, d, s, s, e], b)) return "5";
 
   // Win third row
-  if (compareBoards([...d_r, ...d_r, ...r_1], b)) return "6";
-  if (compareBoards([...d_r, ...d_r, ...r_2], b)) return "7";
-  if (compareBoards([...d_r, ...d_r, ...r_3], b)) return "8";
+  if (compareBoards([d, d, d, d, d, d, e, s, s], b)) return "6";
+  if (compareBoards([d, d, d, d, d, d, s, e, s], b)) return "7";
+  if (compareBoards([d, d, d, d, d, d, s, s, e], b)) return "8";
 
   // Win first column
   if (compareBoards([e, d, d, s, d, d, s, d, d], b)) return "0";
@@ -52,7 +51,7 @@ function checkIfWinningOnNextTurn(b, s) {
   // Win second column
   if (compareBoards([d, e, d, d, s, d, d, s, d], b)) return "1";
   if (compareBoards([d, s, d, d, e, d, d, s, d], b)) return "4";
-  if (compareBoards([d, s, d, d, s, d, e, e, d], b)) return "7";
+  if (compareBoards([d, s, d, d, s, d, d, e, d], b)) return "7";
 
   // Win third column
   if (compareBoards([d, d, e, d, d, s, d, d, s], b)) return "2";
@@ -72,31 +71,49 @@ function checkIfWinningOnNextTurn(b, s) {
 
 // Main Logic of next play
 function aiPlay() {
-  const board = state.board;
+  const b = state.board;
+  let cell;
+
+  let aiWon = false;
+  let draw = false;
+
   // Check for self wins, snatch win if present
-  let i = checkIfWinningOnNextTurn(board, state.next);
-  if (i) board[+i] = state.next;
-  else {
+  let i = checkIfWinningOnNextTurn(b, state.next);
+  if (i) {
+    cell = i;
+    aiWon = true;
+  } else {
     // If no self win, check for opponent win, block that win
-    i = checkIfWinningOnNextTurn(board, state.prev);
-    if (i) board[+i] = state.next;
+    i = checkIfWinningOnNextTurn(b, state.prev);
+    if (i) cell = i;
     else {
       // If center if free, take it
-      if (!board[4]) board[4] = state.next;
+      if (!b[4]) cell = "4";
       // Else take a corner on top
-      else if (!board[0]) board[0] = state.next;
+      else if (!b[0]) cell = "0";
       else {
         // Pick the first empty spot
-        i = board.findIndex((c) => !c);
-        board[+i] = state.next;
+        i = b.findIndex(c => !c);
+        if (i >= 0) {
+          cell = i.toString(); // In case of 0
+        } else {
+          // If no empty spot then game is draw
+          draw = true;
+        }
       }
     }
   }
 
+  if (cell) state.board[Number(cell)] = state.next;
+
   state.aiTurns++;
   state.prev = state.next;
   state.next = state.next === x ? o : x;
-  setState(state);
+
+  if (aiWon) state.aiWon = true;
+  else if (draw) state.draw = true;
+
+  setState();
 }
 
 function plPlay(e) {
@@ -106,29 +123,74 @@ function plPlay(e) {
   state.board[cell] = state.next;
   state.prev = state.next;
   state.next = state.next === x ? o : x;
-  aiPlay(state);
+  aiPlay();
 }
 
-function setState(state) {
+function setState() {
   setBoard(state.board);
+  updateMsg();
+}
+
+function resetState() {
+  state = {
+    plTurns: 0,
+    aiTurns: 0,
+    next: x,
+    prev: o,
+    board: Array(9).fill(""),
+    aiWon: false,
+    draw: false,
+  };
+
+  setBoard(state.board);
+
+  msgBox.innerHTML = "Click on any tile to start";
+  msgBox.className = "";
 }
 
 function setBoard(board) {
   for (let i = 0; i < board.length; i++) {
-    if (board[i] && dom_cells[i].innerHTML != board[i]) {
+    if (!board[i]) {
+      if (dom_cells[i].innerHTML !== "") {
+        dom_cells[i].innerHTML = "";
+        dom_cells[i].className = "cell";
+      }
+    } else if (dom_cells[i].innerHTML != board[i]) {
       dom_cells[i].innerHTML = board[i];
       dom_cells[i].className = board[i] === x ? "cell-x" : "cell-o";
     }
   }
 }
 
+function updateMsg(msg) {
+  if (state.aiWon) {
+    msgBox.innerHTML = "Boo, you lose!";
+    msgBox.className = "ai-won";
+  } else if (state.draw) {
+    msgBox.innerHTML = "Great, managed to draw!";
+    msgBox.className = "draw";
+  } else {
+    console.log(state);
+    if (state.aiTurns + state.plTurns === 2) {
+      msgBox.innerHTML = "Game On!";
+      msgBox.className = "game-on";
+    }
+  }
+}
+
+// Cache dom elements
 const dom_cells = [];
+let msgBox;
 
 window.onload = () => {
-  setState(state);
-
   for (let cell of document.getElementsByClassName("cell")) {
     cell.addEventListener("click", plPlay);
-    dom_cells.push(cell); // cache
+    dom_cells.push(cell);
   }
+
+  document.getElementById("resetBtn").addEventListener("click", resetState);
+
+  msgBox = document.getElementById("msg-box");
+
+  resetState();
 };

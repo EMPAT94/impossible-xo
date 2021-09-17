@@ -5,25 +5,30 @@
     <meta name="”viewport”" content-width="device-width" initial-scale="1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title>Impossible XO</title>
-    <meta
-      name="description"
-      content="A tic-tac-toe game that is impossible to win!"
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="canonical" href="https://www.priteshtupe.com/xo" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Gentium+Basic|Jura&display=swap"
+      rel="stylesheet"
     />
-    <meta name="author" content="Pritesh Tupe" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
 
-    <link rel="stylesheet" href="style.css" />
+    <title>Impossible XO</title>
+    <meta name="description" content="A tic-tac-toe game that is impossible to win!" />
+    <meta name="author" content="Pritesh Tupe" />
   </head>
 
   <body>
     <div class="container">
-      <table id="board">
-        <thead>
-          <tr id="msg-box" >
-            <td colspan="3">message box</td>
-          </tr>
-        </thead>
+      <h1>IMPOSSIBLE TIC-TAC-TOE</h1>
 
+      <h2>Try your luck against the ultimate XO AI,</h2>
+
+      <div id="msg-box">Initializing...Please wait!</div>
+
+      <table id="board">
         <tbody>
           <tr>
             <td class="cell" id="0"></td>
@@ -42,6 +47,21 @@
           </tr>
         </tbody>
       </table>
+
+      <div class="footer">
+        <button class="bottomBtn" id="resetBtn">Reset Board</button>
+        <a href="https://www.priteshtupe.com/">
+          <button class="bottomBtn">Visit Main Site</button>
+        </a>
+        <a
+          target="_blank"
+          referrerpolicy="no-referrer"
+          rel="none"
+          href="https://www.github.com/empat94/impossible-xo"
+        >
+          <button class="bottomBtn">Check Source</button>
+        </a>
+      </div>
     </div>
 
     <script type="text/javascript" src="logic.js"></script>

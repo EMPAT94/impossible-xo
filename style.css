@@ -1,19 +1,66 @@
 html,
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: #666;
+  font-family: "Gentium Basic", serif;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+h1,
+h2 {
+  font-family: "Jura", sans-serif;
+  font-weight: bold;
+}
+
+h1 {
+  color: cornflowerblue;
+}
+
+h2 {
+  color: rgb(220, 86, 220);
+}
+
+button {
+  border: 2px solid darkslategray;
+  border-radius: 50px;
+  padding: 1em;
+  font-size: 1.2em;
+  color: darkslategrey;
+  background-color: white;
+  cursor: pointer;
+  margin: 1em;
+  transform: scale(1);
+  transition-property: transform, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+}
+
+#resetBtn {
+  color: teal;
+  border: 2px solid teal;
+}
+
+button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 30px 0 rgba(0, 0, 0, 0.4);
 }
 
 .container {
-  width: 80%;
-  border: 2px solid black;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
+  margin: auto auto;
   text-align: center;
 }
 
 #board {
-  max-width: 300px;
   margin-top: 2em;
   margin-bottom: 2em;
   margin-left: auto;
@@ -21,45 +68,56 @@ body {
 }
 
 #msg-box {
-  font-size: 24px;
+  font-family: "cursive";
+  font-size: 1.02em;
+  font-weight: bolder;
+  text-decoration: underline;
+}
+
+#msg-box.game-on {
+  transition: 3s ease-in;
+  color: darkslategray;
+}
+
+#msg-box.ai-won {
+  transition: 2s ease-in-out;
+  color: crimson;
+}
+
+#msg-box.draw {
+  transition: 3s ease-in;
+  color: green;
+}
+
+.cell,
+.cell-x,
+.cell-o {
+  border: 3px solid lightslategray;
+  height: 5em;
+  width: 5em;
+  font-size: 2em;
+  color: whitesmoke;
+  cursor: not-allowed;
 }
 
 .cell {
-  cursor: pointer;
-  border: 1px solid lightslategray;
+  cursor: pointer !important;
   background-color: white;
-  height: 100px;
-  width: 100px;
   transform: scale(1);
   transition-property: background-color, transform;
-  transition-duration: 0.3s;
+  transition-duration: 0.2s;
   transition-timing-function: ease-in;
 }
 
 .cell:hover {
   transform: scale(1.1);
-  background-color: lightgoldenrodyellow;
+  background-color: cornflowerblue;
 }
 
 .cell-x {
-  height: 100px;
-  width: 100px;
-  cursor: not-allowed;
-  background-color: white;
-  background-color: lightsteelblue;
-  border: 1px solid white;
-  font-size: 32px;
-  color: whitesmoke;
+  background-color: cornflowerblue;
 }
 
 .cell-o {
-  height: 100px;
-  width: 100px;
-  cursor: not-allowed;
-  background-color: white;
-  background-color: lightsalmon;
-  border: 1px solid white;
-  font-size: 32px;
-  color: whitesmoke;
+  background-color: darkorange;
 }
-
