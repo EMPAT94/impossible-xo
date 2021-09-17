@@ -138,7 +138,10 @@ function plPlay(e) {
   state.board[cell] = state.next;
   state.prev = state.next;
   state.next = state.next === x ? o : x;
-  aiPlay();
+
+  // NOTE: This setState() and timeout is just for adding delay in ai turn, aesthetic purposes
+  setState();
+  setTimeout(aiPlay, Math.random() * 1000);
 }
 
 function setState() {
@@ -159,7 +162,7 @@ function resetState() {
 
   setBoard(state.board);
 
-  msgBox.innerHTML = "Click on any tile to start";
+  msgBox.innerHTML = "AI: Click on any tile to start, if you dare!";
   msgBox.className = "";
 }
 
@@ -179,15 +182,23 @@ function setBoard(board) {
 
 function updateMsg(msg) {
   if (state.aiWon) {
-    msgBox.innerHTML = "Boo, you lose!";
+    msgBox.innerHTML = "AI: Boo, you lose!";
     msgBox.className = "ai-won";
   } else if (state.draw) {
-    msgBox.innerHTML = "Great, managed to draw!";
+    msgBox.innerHTML = "AI: Great, you managed to draw atleast!";
     msgBox.className = "draw";
   } else {
-    if (state.aiTurns + state.plTurns === 2) {
-      msgBox.innerHTML = "Game On!";
+    if (msgBox.innerHTML !== "AI: Your turn...") {
+      msgBox.innerHTML = "AI: Your turn...";
       msgBox.className = "game-on";
+    }
+
+    if (state.plTurns > state.aiTurns) {
+      let r = Math.random();
+      if (r < 0.5) msgBox.innerHTML = "AI: Crunching numbers, please wait...";
+      else if (r < 0.8) msgBox.innerHTML = "AI: Checking conditions, please wait...";
+      else msgBox.innerHTML = "AI: Admiring colors, please wait...";
+      msgBox.className = "processing";
     }
   }
 }
