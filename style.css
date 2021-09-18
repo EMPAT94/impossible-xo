@@ -92,7 +92,8 @@ button:hover {
 
 .cell,
 .cell-x,
-.cell-o {
+.cell-o,
+.cell-disabled {
   border: 3px solid lightslategray;
   height: 5em;
   width: 5em;
@@ -105,13 +106,12 @@ button:hover {
   cursor: pointer !important;
   background-color: white;
   transform: scale(1);
-  transition-property: background-color, transform;
+  transition-property: background-color;
   transition-duration: 0.2s;
   transition-timing-function: ease-in;
 }
 
 .cell:hover {
-  transform: scale(1.1);
   background-color: cornflowerblue;
 }
 
@@ -121,4 +121,9 @@ button:hover {
 
 .cell-o {
   background-color: darkorange;
+}
+
+.cell-disabled {
+  border: 0;
+  background-color: lightgrey;
 }

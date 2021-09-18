@@ -78,6 +78,7 @@ function checkIfLosing() {
 
   if (compareBoards([e, e, d, e, o, d, x, e, e], b)) return "1";
   if (compareBoards([d, e, e, e, o, d, e, d, e], b)) return "8";
+  if (compareBoards([s, e, e, e, x, e, e, e, x], b)) return "2";
 }
 
 // Main Logic of next play
@@ -133,13 +134,14 @@ function aiPlay() {
 
 function plPlay(e) {
   const cell = Number(e.target.id);
-  if (state.board[cell]) return;
+  if (state.board[cell] || state.aiWon || state.draw) return;
   state.plTurns++;
   state.board[cell] = state.next;
   state.prev = state.next;
   state.next = state.next === x ? o : x;
 
-  // NOTE: This setState() and timeout is just for adding delay in ai turn, aesthetic purposes
+  // NOTE: This setState() and timeout is just for adding delay in ai turn,
+  // for aesthetic purposes
   setState();
   setTimeout(aiPlay, Math.random() * 1000);
 }
@@ -169,10 +171,8 @@ function resetState() {
 function setBoard(board) {
   for (let i = 0; i < board.length; i++) {
     if (!board[i]) {
-      if (dom_cells[i].innerHTML !== "") {
-        dom_cells[i].innerHTML = "";
-        dom_cells[i].className = "cell";
-      }
+      dom_cells[i].innerHTML = "";
+      dom_cells[i].className = "cell";
     } else if (dom_cells[i].innerHTML != board[i]) {
       dom_cells[i].innerHTML = board[i];
       dom_cells[i].className = board[i] === x ? "cell-x" : "cell-o";
@@ -182,25 +182,32 @@ function setBoard(board) {
 
 function updateMsg(msg) {
   if (state.aiWon) {
-    msgBox.innerHTML = "AI: Boo, you lose!";
+    msgBox.innerHTML = "AI: Booooo, you lose!";
     msgBox.className = "ai-won";
+    closeBoard();
   } else if (state.draw) {
     msgBox.innerHTML = "AI: Great, you managed to draw atleast!";
     msgBox.className = "draw";
+    closeBoard();
   } else {
-    if (msgBox.innerHTML !== "AI: Your turn...") {
-      msgBox.innerHTML = "AI: Your turn...";
-      msgBox.className = "game-on";
-    }
-
     if (state.plTurns > state.aiTurns) {
       let r = Math.random();
       if (r < 0.5) msgBox.innerHTML = "AI: Crunching numbers, please wait...";
       else if (r < 0.8) msgBox.innerHTML = "AI: Checking conditions, please wait...";
       else msgBox.innerHTML = "AI: Admiring colors, please wait...";
       msgBox.className = "processing";
+    } else {
+      let r = Math.random();
+      if (r < 0.5) msgBox.innerHTML = "AI: Your turn, human.";
+      else if (r < 0.8) msgBox.innerHTML = "AI: Go ahead, make your play.";
+      else msgBox.innerHTML = "AI: NEXT!!!";
+      msgBox.className = "game-on";
     }
   }
+}
+
+function closeBoard() {
+  dom_cells.forEach(cell => cell.innerHTML === "" && (cell.className = "cell-disabled"));
 }
 
 // Cache dom elements
