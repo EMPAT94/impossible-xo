@@ -143,6 +143,7 @@ function plPlay(e) {
   // NOTE: This setState() and timeout is just for adding delay in ai turn,
   // for aesthetic purposes
   setState();
+  closeBoard();
   setTimeout(aiPlay, Math.random() * 1000);
 }
 
